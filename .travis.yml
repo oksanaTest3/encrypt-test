@@ -8,9 +8,11 @@ install: skip
 jobs:
   include:
     - name: testing
-      script: true
+      script:
+        - if [ -z "$MY_SECRET" ]; then echo "MY_SECRET is not set"; exit 1; fi
+        - echo "MY_SECRET is set and its length is ${#MY_SECRET}"
 after_success:
-  - echo passed
+  - echo done
   - echo $TRAVIS_TEST_RESULT
 after_failure:
   - echo failed
@@ -18,3 +20,6 @@ after_failure:
 env:
   global:
     secure: TlusOETNcitQC/WWkH1Nkk1eaaIJZmoPC030ZiFsThEVd6WrnrVi7rTgz9iz/BeWCkgGv+TfwZsfwtOadF77QcEQjw1BE3DLpm/yfvsT3m8WnkJqKoJeMb6JDqOHXe9OFVzvdSUJ24Z3eOVQutdDbEu9UXFZ6AchiBF6GE3WHVoOyTZDIoqrddDY9Rhuq9/0Y/Z09CLVofIyd6ba2cOUwS03bFQRgjMA4Iis5HfCuEedSM2VVz66Rc5pBjfT8dIubXd5MSQo/cCnFGN8ZKy7hx0pV171huEdbPTR2p0FY2tkNHRvG2MEhqAQ5ttOPDgmMe43l8HaoD5f102+LVmSExX9sqLPWROOu3Bag+WQcaeMlwCX9fJWD3CUxZqrTZle1SEu8qT2CxM4b9PuaeYwFOMMtw6QX/QhmPqO1nocqeNWcZdl/RCdiSOcU2fuUdusPbGGlX7T56OmNaelvarBwwB8e4Ol8pO+zmYEpl4CqD1UP9JOtS18vVKmcoKZUEBGZs2T++tyt3T6MCwKAsIVMo/zNzfAy3PzSYp6aSYCLMRWRrYCkuDHMpO7+2kJW6HOhL3//IufJrVe5wHyw+2vybSe6FUWhrbYKhb/reW9lPLLo3UQthqRWdsSbr6+dUt6pkqxi3MlzrZLlu54siUQqCLAYdejCtpHhjha7h0u55E=
+before_install:
+  - openssl aes-256-cbc -K $encrypted_355e94ba1091_key -iv $encrypted_355e94ba1091_iv
+    -in super_secret.txt.enc -out super_secret.txt -d
